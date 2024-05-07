@@ -2,4 +2,6 @@
     <string name="app_name">Assesment2</string>
     <string name="list_kosong">There is no data yet</string>
     <string name="x_diklik">%1$s clicked!</string>
+    <string name="tambah_pesanan">Add Order</string>
+    <string name="tambah_eror">Can\'t add orders yet</string>
 </resources>
