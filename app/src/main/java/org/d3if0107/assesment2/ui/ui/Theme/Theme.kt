@@ -1,4 +1,4 @@
-package org.d3if0107.assesment2.ui.theme
+package org.d3if0107.assesment2.ui.ui.Theme
 
 import android.app.Activity
 import android.os.Build

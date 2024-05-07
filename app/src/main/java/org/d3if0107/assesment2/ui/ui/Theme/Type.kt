@@ -1,4 +1,4 @@
-package org.d3if0107.assesment2.ui.theme
+package org.d3if0107.assesment2.ui.ui.Theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
