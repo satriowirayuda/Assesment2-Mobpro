@@ -32,14 +32,16 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import org.d3if0107.assesment2.R
 import org.d3if0107.assesment2.model.ListCustomer
+import org.d3if0107.assesment2.navigation.Screen
 import org.d3if0107.assesment2.ui.ui.Theme.Assesment2Theme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen() {
-    val context = LocalContext.current
+fun MainScreen(navController: NavHostController) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -55,7 +57,7 @@ fun MainScreen() {
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    Toast.makeText(context, R.string.tambah_eror, Toast.LENGTH_SHORT).show()
+                    navController.navigate(Screen.FormBaru.route)
                 }
             ) {
                 Icon(
@@ -130,6 +132,10 @@ fun ListItem(listCustomer: ListCustomer, onClick: () -> Unit) {
             maxLines = 2,
             overflow = TextOverflow.Ellipsis
         )
+        Text(
+            text = listCustomer.jenis,
+            fontWeight = FontWeight.Bold
+        )
         Text(text = listCustomer.tanggal)
     }
 }
@@ -139,6 +145,6 @@ fun ListItem(listCustomer: ListCustomer, onClick: () -> Unit) {
 @Composable
 fun ScreenPreview() {
     Assesment2Theme {
-        MainScreen()
+        MainScreen(rememberNavController())
     }
 }

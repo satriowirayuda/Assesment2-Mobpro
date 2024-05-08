@@ -3,8 +3,9 @@
     <string name="list_kosong">There is no data yet</string>
     <string name="x_diklik">%1$s clicked!</string>
     <string name="tambah_pesanan">Add Order</string>
-    <string name="tambah_eror">Can\'t add orders yet</string>
     <string name="judul">Title</string>
     <string name="isi_catatan">Order Contents</string>
     <string name="nama_customer">Name Customer</string>
+    <string name="kembali">Back</string>
+    <string name="simpan">Save</string>
 </resources>

@@ -3,9 +3,10 @@
     <string name="app_name">Assesment2</string>
     <string name="list_kosong">Belom ada data</string>
     <string name="x_diklik">"%1$s diklik! "</string>
-    <string name="tambah_eror">Belum bisa tambah pesanan</string>
     <string name="tambah_pesanan">Tambah Pesanan</string>
     <string name="judul">Judul</string>
     <string name="isi_catatan">Isi Pesanan</string>
     <string name="nama_customer">Nama Pelanggan</string>
+    <string name="kembali">Kembali</string>
+    <string name="simpan">Simpan</string>
 </resources>

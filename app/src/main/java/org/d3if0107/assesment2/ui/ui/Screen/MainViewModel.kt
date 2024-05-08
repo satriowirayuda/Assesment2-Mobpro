@@ -26,6 +26,15 @@ class MainViewModel : ViewModel() {
             "Mie Goreng 2\nMie Aceh 2\n Es Teh 2",
             "Dimsum Goreng 1\nMie Aceh 2\n Es Jeruk 1"
         )
+        val jenis = listOf(
+            "Makan Ditempat",
+            "Makan Ditempat",
+            "DiBawa Pulang",
+            "Makan Ditempat",
+            "DiBawa Pulang",
+            "DiBawa Pulang",
+            "DiBawa Pulang"
+        )
 
         for (i in namaList.indices){
             data.add(
@@ -34,6 +43,7 @@ class MainViewModel : ViewModel() {
                     "Pesanan ke ${i+1}",
                     namaList[i],
                     orderan[i],
+                    jenis[i],
                     "2024-03-${i+1} 14:42:56"
                 )
             )

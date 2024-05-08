@@ -5,5 +5,6 @@ data class ListCustomer(
     val orderan: String,
     val nama : String,
     val pesanan: String,
+    val jenis : String,
     val tanggal: String,
 )
