@@ -29,11 +29,11 @@ class MainViewModel : ViewModel() {
         val jenis = listOf(
             "Makan Ditempat",
             "Makan Ditempat",
-            "DiBawa Pulang",
+            "Dibungkus",
             "Makan Ditempat",
-            "DiBawa Pulang",
-            "DiBawa Pulang",
-            "DiBawa Pulang"
+            "Dibungkus",
+            "Dibungkus",
+            "Dibungkus"
         )
 
         for (i in namaList.indices){

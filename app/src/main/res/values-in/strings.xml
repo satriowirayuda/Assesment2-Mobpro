@@ -5,8 +5,9 @@
     <string name="x_diklik">"%1$s diklik! "</string>
     <string name="tambah_pesanan">Tambah Pesanan</string>
     <string name="judul">Judul</string>
-    <string name="isi_catatan">Isi Pesanan</string>
+    <string name="isi_pesanan">Isi Pesanan</string>
     <string name="nama_customer">Nama Pelanggan</string>
+    <string name="pesanan">Pesanan</string>
     <string name="kembali">Kembali</string>
     <string name="simpan">Simpan</string>
 </resources>

@@ -1,11 +1,15 @@
 package org.d3if0107.assesment2.ui.ui.Screen
 
 import android.content.res.Configuration
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -15,6 +19,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -24,7 +29,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
@@ -40,6 +47,13 @@ import org.d3if0107.assesment2.ui.ui.Theme.Assesment2Theme
 fun DetailScreen(navConreoller: NavHostController) {
     var judul by remember { mutableStateOf("") }
     var name by remember { mutableStateOf("") }
+    var pesanan by remember { mutableStateOf("") }
+    var jenis by remember { mutableStateOf("") }
+
+    val jenisOptions = listOf(
+        "Makan Ditempat",
+        "Dibungkus",
+    )
 
     Scaffold(
         topBar = {
@@ -77,6 +91,11 @@ fun DetailScreen(navConreoller: NavHostController) {
             onOrdersChange = { judul = it },
             name = name,
             onNameChange = { name = it},
+            pesanan = pesanan,
+            onPesananChange = {pesanan = it},
+            jenis = jenis,
+            onJenisChange = { jenis = it},
+            jenisOptions = jenisOptions,
             modifier = Modifier.padding(padding)
         )
     }
@@ -86,6 +105,9 @@ fun DetailScreen(navConreoller: NavHostController) {
 fun FormPesanan(
     orders: String, onOrdersChange: (String) -> Unit,
     name: String, onNameChange: (String) -> Unit,
+    pesanan: String, onPesananChange: (String) -> Unit,
+    jenis: String, onJenisChange: (String) -> Unit,
+    jenisOptions: List<String>,
    modifier: Modifier
 ){
     Column (
@@ -101,7 +123,7 @@ fun FormPesanan(
             singleLine = true,
             keyboardOptions = KeyboardOptions(
                 capitalization = KeyboardCapitalization.Words,
-                imeAction = ImeAction.Next
+                imeAction = ImeAction.Done
             ),
             modifier = Modifier.fillMaxWidth()
         )
@@ -116,6 +138,43 @@ fun FormPesanan(
             ),
             modifier = Modifier.fillMaxWidth()
         )
+        OutlinedTextField(
+            value = pesanan,
+            onValueChange = { onPesananChange(it) },
+            label = { Text(text = stringResource(id = R.string.pesanan)) },
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(
+                capitalization = KeyboardCapitalization.Words,
+                imeAction = ImeAction.Next
+            ),
+            modifier = Modifier.fillMaxWidth()
+        )
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 16.dp)
+                .border(
+                    width = 1.dp,
+                    color = Color.Gray,
+                    shape = RoundedCornerShape(4.dp)
+                )
+                .padding(8.dp)
+        ) {
+            Column {
+                jenisOptions.forEach { option ->
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        RadioButton(
+                            selected = jenis == option,
+                            onClick = { onJenisChange(option) }
+                        )
+                        Text(text = option)
+                    }
+                }
+            }
+        }
     }
 }
 
