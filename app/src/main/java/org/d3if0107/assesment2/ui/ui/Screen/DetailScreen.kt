@@ -42,9 +42,11 @@ import androidx.navigation.compose.rememberNavController
 import org.d3if0107.assesment2.R
 import org.d3if0107.assesment2.ui.ui.Theme.Assesment2Theme
 
+const val KEY_ID_PESANAN = "idPesanan"
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DetailScreen(navConreoller: NavHostController) {
+fun DetailScreen(navConreoller: NavHostController, id: Long? = null) {
     var judul by remember { mutableStateOf("") }
     var name by remember { mutableStateOf("") }
     var pesanan by remember { mutableStateOf("") }
@@ -68,7 +70,10 @@ fun DetailScreen(navConreoller: NavHostController) {
                     }
                 },
                 title = {
-                    Text(text = stringResource(id = R.string.tambah_pesanan))
+                    if (id == null)
+                        Text(text = stringResource(id = R.string.tambah_pesanan))
+                    else
+                        Text(text = stringResource(id = R.string.edit_pesanan))
                 },
                 colors = TopAppBarDefaults.mediumTopAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
@@ -90,11 +95,11 @@ fun DetailScreen(navConreoller: NavHostController) {
             orders = judul,
             onOrdersChange = { judul = it },
             name = name,
-            onNameChange = { name = it},
+            onNameChange = { name = it },
             pesanan = pesanan,
-            onPesananChange = {pesanan = it},
+            onPesananChange = { pesanan = it },
             jenis = jenis,
-            onJenisChange = { jenis = it},
+            onJenisChange = { jenis = it },
             jenisOptions = jenisOptions,
             modifier = Modifier.padding(padding)
         )
@@ -108,9 +113,9 @@ fun FormPesanan(
     pesanan: String, onPesananChange: (String) -> Unit,
     jenis: String, onJenisChange: (String) -> Unit,
     jenisOptions: List<String>,
-   modifier: Modifier
-){
-    Column (
+    modifier: Modifier
+) {
+    Column(
         modifier = modifier
             .fillMaxSize()
             .padding(16.dp),
@@ -123,7 +128,7 @@ fun FormPesanan(
             singleLine = true,
             keyboardOptions = KeyboardOptions(
                 capitalization = KeyboardCapitalization.Words,
-                imeAction = ImeAction.Done
+                imeAction = ImeAction.Next
             ),
             modifier = Modifier.fillMaxWidth()
         )
@@ -142,10 +147,9 @@ fun FormPesanan(
             value = pesanan,
             onValueChange = { onPesananChange(it) },
             label = { Text(text = stringResource(id = R.string.pesanan)) },
-            singleLine = true,
             keyboardOptions = KeyboardOptions(
-                capitalization = KeyboardCapitalization.Words,
-                imeAction = ImeAction.Next
+                capitalization = KeyboardCapitalization.Sentences,
+                imeAction = ImeAction.Done
             ),
             modifier = Modifier.fillMaxWidth()
         )
@@ -183,6 +187,6 @@ fun FormPesanan(
 @Composable
 fun DetailScreenPriview() {
     Assesment2Theme {
-        MainScreen(rememberNavController())
+        DetailScreen(rememberNavController())
     }
 }

@@ -9,4 +9,5 @@
     <string name="pesanan">Order</string>
     <string name="kembali">Back</string>
     <string name="simpan">Save</string>
+    <string name="edit_pesanan">Change Order</string>
 </resources>
