@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Assesment2</string>
+    <string name="app_name">List Pesanan</string>
     <string name="list_kosong">Belom ada data</string>
     <string name="x_diklik">"%1$s diklik! "</string>
     <string name="tambah_pesanan">Tambah Pesanan</string>

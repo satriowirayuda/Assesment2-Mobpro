@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">list Pesanan </string>
+    <string name="app_name">List Order </string>
     <string name="list_kosong">There is no data yet</string>
     <string name="x_diklik">%1$s clicked!</string>
     <string name="tambah_pesanan">Add Order</string>
