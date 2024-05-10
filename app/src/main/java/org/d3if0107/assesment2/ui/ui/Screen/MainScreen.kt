@@ -36,7 +36,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import org.d3if0107.assesment2.R
-import org.d3if0107.assesment2.database.PesananDao
 import org.d3if0107.assesment2.database.PesananDb
 import org.d3if0107.assesment2.model.ListCustomer
 import org.d3if0107.assesment2.navigation.Screen

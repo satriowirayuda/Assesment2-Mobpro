@@ -26,6 +26,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -68,8 +69,9 @@ fun DetailScreen(navConreoller: NavHostController, id: Long? = null) {
         "Dibungkus",
     )
 
-    if (id != null){
-        val data = viewModel.getPesanan(id)
+    LaunchedEffect(true){
+        if(id == null) return@LaunchedEffect
+        val data = viewModel.getPesanan(id) ?: return@LaunchedEffect
         if (data != null) {
             judul = data.orderan
             name = data.nama
@@ -108,6 +110,8 @@ fun DetailScreen(navConreoller: NavHostController, id: Long? = null) {
                         }
                         if (id == null){
                             viewModel.insert(judul, name, pesanan, jenis)
+                        }else{
+                            viewModel.update(id,judul, name, pesanan, jenis)
                         }
                         navConreoller.popBackStack()
                     }) {
