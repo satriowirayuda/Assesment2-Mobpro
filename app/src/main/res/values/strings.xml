@@ -11,4 +11,6 @@
     <string name="simpan">Save</string>
     <string name="edit_pesanan">Change Order</string>
     <string name="invalid">Order Number, Customer Name, Order and Customer Order Service Type cannot be empty.</string>
+    <string name="lainya">More Options</string>
+    <string name="hapus">Delete Order</string>
 </resources>
