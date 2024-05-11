@@ -14,4 +14,9 @@
     <string name="invalid">Nomer Orderan, Nama Customer, Pesanan dan Jenis Layanan Pesanan Customer tidak boleh kosong.</string>
     <string name="lainya">Opsi Lainnya</string>
     <string name="hapus">Hapus Pesanan</string>
+    <string name="pesan_hapus">Hapus Pesanan</string>
+    <string name="tombol_hapus">Hapus</string>
+    <string name="tombol_batal">Batal</string>
+    <string name="list">Tampilan List</string>
+    <string name="grid">Tampilan Grid</string>
 </resources>

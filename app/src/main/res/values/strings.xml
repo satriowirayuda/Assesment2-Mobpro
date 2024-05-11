@@ -13,4 +13,9 @@
     <string name="invalid">Order Number, Customer Name, Order and Customer Order Service Type cannot be empty.</string>
     <string name="lainya">More Options</string>
     <string name="hapus">Delete Order</string>
+    <string name="pesan_hapus">Delete Order</string>
+    <string name="tombol_hapus">Delete</string>
+    <string name="tombol_batal">Cansel</string>
+    <string name="list">Display List</string>
+    <string name="grid">Display Grid</string>
 </resources>

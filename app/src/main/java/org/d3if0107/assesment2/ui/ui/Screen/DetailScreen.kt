@@ -67,6 +67,8 @@ fun DetailScreen(navConreoller: NavHostController, id: Long? = null) {
     var pesanan by remember { mutableStateOf("") }
     var jenis by remember { mutableStateOf("") }
 
+    var showDialog by remember { mutableStateOf(false) }
+
     val jenisOptions = listOf(
         "Makan Ditempat",
         "Dibungkus",
@@ -123,7 +125,12 @@ fun DetailScreen(navConreoller: NavHostController, id: Long? = null) {
                         )
                     }
                     if (id != null) {
-                        DeleteAction {
+                        DeleteAction { showDialog = true }
+                        DisplayAlertDialog(
+                            openDialog = showDialog,
+                            onDismissRequest = { showDialog = false }
+                        ) {
+                            showDialog = false
                             viewModel.delete(id)
                             navConreoller.popBackStack()
                         }
