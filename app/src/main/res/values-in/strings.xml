@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Assesment2</string>
+    <string name="app_name">Assesment 3</string>
+    <string name="gambar">Gambar %1$s</string>
 </resources>

@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">Assesment2</string>
+    <string name="app_name">Assesment 3</string>
+    <string name="gambar">Image %1$s</string>
 </resources>
