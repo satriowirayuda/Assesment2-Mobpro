@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -90,6 +91,7 @@ fun ListItem(hewan: Hewan) {
 
             contentDescription = stringResource(id = R.string.gambar, hewan.nama),
             contentScale = ContentScale.Crop,
+            placeholder = painterResource(id = R.drawable.loading_img),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(4.dp)
