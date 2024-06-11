@@ -1,6 +1,11 @@
 package org.d3if0107.assesment2.ui.Ui.screen
 
+import android.content.Context
 import android.content.res.Configuration
+import android.credentials.CredentialManager
+import android.credentials.GetCredentialException
+import android.credentials.GetCredentialRequest
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -16,6 +21,8 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -36,9 +43,18 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.credentials.CustomCredential
+import androidx.credentials.GetCredentialResponse
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.google.android.libraries.identity.googleid.GetGoogleIdOption
+import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
+import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingException
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import org.d3if0107.assesment2.BuildConfig
 import org.d3if0107.assesment2.R
 import org.d3if0107.assesment2.model.Hewan
 import org.d3if0107.assesment2.network.HewanApi
@@ -47,6 +63,8 @@ import org.d3if0107.assesment2.ui.theme.Assesment2Theme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen() {
+    val context = LocalContext.current
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -56,7 +74,18 @@ fun MainScreen() {
                 colors = TopAppBarDefaults.mediumTopAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
                     titleContentColor = MaterialTheme.colorScheme.primary
-                )
+                ),
+                actions = {
+                    IconButton(onClick = {
+                        CoroutineScope(Dispatchers.IO).launch{ signIn(context) }
+                    }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.baseline_account_circle_24),
+                            contentDescription = stringResource(id = R.string.profil),
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                }
             )
         }
     ) { padding ->
@@ -70,15 +99,16 @@ fun ScreenContent(modifier: Modifier) {
     val data by viewModel.data
     val status by viewModel.status.collectAsState()
 
-    when (status){
+    when (status) {
         HewanApi.ApiStatus.LOADING -> {
             Box(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
-                ){
+            ) {
                 CircularProgressIndicator()
             }
         }
+
         HewanApi.ApiStatus.SUCCESS -> {
             LazyVerticalGrid(
                 modifier = modifier
@@ -89,18 +119,19 @@ fun ScreenContent(modifier: Modifier) {
                 items(data) { ListItem(hewan = it) }
             }
         }
+
         HewanApi.ApiStatus.FAILED -> {
-            Column (
+            Column(
                 modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
-            ){
+            ) {
                 Text(text = stringResource(id = R.string.error))
                 Button(
                     onClick = { viewModel.retrieveData() },
                     modifier = Modifier.padding(top = 16.dp),
                     contentPadding = PaddingValues(horizontal = 32.dp, vertical = 16.dp)
-                    ) {
+                ) {
                     Text(text = stringResource(id = R.string.try_again))
                 }
             }
@@ -150,6 +181,42 @@ fun ListItem(hewan: Hewan) {
                 color = Color.White
             )
         }
+    }
+}
+
+private suspend fun signIn(context: Context) {
+    val googleIdOption: GetGoogleIdOption = GetGoogleIdOption.Builder()
+        .setFilterByAuthorizedAccounts(false)
+        .setServerClientId(BuildConfig.API_KEY)
+        .build()
+
+    val request: androidx.credentials.GetCredentialRequest =
+        androidx.credentials.GetCredentialRequest.Builder()
+            .addCredentialOption(googleIdOption)
+            .build()
+
+    try {
+        val credentialManager = androidx.credentials.CredentialManager.create(context)
+        val result = credentialManager.getCredential(context, request)
+        handleSignIn(result)
+    } catch (e: androidx.credentials.exceptions.GetCredentialException) {
+        Log.e("SIGN-IN", "ERROR: ${e.errorMessage}")
+    }
+}
+
+private suspend fun handleSignIn(
+    result: GetCredentialResponse
+) {
+    val credential = result.credential
+    if (credential is CustomCredential && credential.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL) {
+        try {
+            val googleId = GoogleIdTokenCredential.createFrom(credential.data)
+            Log.d("SIGN-IN", "User email: ${googleId.id}")
+        } catch (e: GoogleIdTokenParsingException) {
+            Log.e("SIGN_IN", "ERROR: ${e.message}")
+        }
+    } else {
+        Log.e("SIGN-IN", "ERROR: unrecognized custom credential type.")
     }
 }
 
