@@ -30,4 +30,5 @@ object HewanApi {
     fun getHewanUrl(imageId: String): String{
         return "$BASE_URL$imageId.jpg"
     }
+    enum class ApiStatus{ LOADING, SUCCESS}
 }
