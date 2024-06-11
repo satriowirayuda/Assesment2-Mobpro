@@ -2,9 +2,6 @@ package org.d3if0107.assesment2.ui.Ui.screen
 
 import android.content.Context
 import android.content.res.Configuration
-import android.credentials.CredentialManager
-import android.credentials.GetCredentialException
-import android.credentials.GetCredentialRequest
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -57,14 +54,17 @@ import kotlinx.coroutines.launch
 import org.d3if0107.assesment2.BuildConfig
 import org.d3if0107.assesment2.R
 import org.d3if0107.assesment2.model.Hewan
+import org.d3if0107.assesment2.model.User
 import org.d3if0107.assesment2.network.HewanApi
+import org.d3if0107.assesment2.network.UserDataStore
 import org.d3if0107.assesment2.ui.theme.Assesment2Theme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen() {
     val context = LocalContext.current
-
+    val dataStore = UserDataStore(context)
+    val user by dataStore.userFlow.collectAsState(User())
     Scaffold(
         topBar = {
             TopAppBar(
@@ -77,7 +77,11 @@ fun MainScreen() {
                 ),
                 actions = {
                     IconButton(onClick = {
-                        CoroutineScope(Dispatchers.IO).launch{ signIn(context) }
+                        if (user.email.isEmpty()) {
+                            CoroutineScope(Dispatchers.IO).launch { signIn(context, dataStore) }
+                        } else {
+                            Log.d("SIGN-IN", "User: $user")
+                        }
                     }) {
                         Icon(
                             painter = painterResource(id = R.drawable.baseline_account_circle_24),
@@ -184,7 +188,7 @@ fun ListItem(hewan: Hewan) {
     }
 }
 
-private suspend fun signIn(context: Context) {
+private suspend fun signIn(context: Context, dataStore: UserDataStore) {
     val googleIdOption: GetGoogleIdOption = GetGoogleIdOption.Builder()
         .setFilterByAuthorizedAccounts(false)
         .setServerClientId(BuildConfig.API_KEY)
@@ -198,20 +202,24 @@ private suspend fun signIn(context: Context) {
     try {
         val credentialManager = androidx.credentials.CredentialManager.create(context)
         val result = credentialManager.getCredential(context, request)
-        handleSignIn(result)
+        handleSignIn(result, dataStore)
     } catch (e: androidx.credentials.exceptions.GetCredentialException) {
         Log.e("SIGN-IN", "ERROR: ${e.errorMessage}")
     }
 }
 
 private suspend fun handleSignIn(
-    result: GetCredentialResponse
+    result: GetCredentialResponse,
+    dataStore: UserDataStore
 ) {
     val credential = result.credential
     if (credential is CustomCredential && credential.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL) {
         try {
             val googleId = GoogleIdTokenCredential.createFrom(credential.data)
-            Log.d("SIGN-IN", "User email: ${googleId.id}")
+            val nama = googleId.displayName ?: ""
+            val email = googleId.id
+            val photoUrl = googleId.profilePictureUri.toString()
+            dataStore.saveData(User(nama, email, photoUrl))
         } catch (e: GoogleIdTokenParsingException) {
             Log.e("SIGN_IN", "ERROR: ${e.message}")
         }
