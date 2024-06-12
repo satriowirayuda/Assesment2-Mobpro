@@ -14,7 +14,7 @@ import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.Part
 
-private const val BASE_URL="https://gh.d3ifcool.org/"
+private const val BASE_URL="https://unspoken.my.id/"
 
 private  val moshi = Moshi.Builder()
             .add(KotlinJsonAdapterFactory())
@@ -25,11 +25,13 @@ private val retrofit = Retrofit.Builder()
     .baseUrl(BASE_URL)
     .build()
 interface BarangApiService {
-    @GET("hewan.php")
-    suspend fun getBarang() : List<Barang>
+    @GET("api_satrio.php")
+    suspend fun getBarang(
+        @Header("Authorization") userId: String
+    ) : List<Barang>
 
     @Multipart
-    @POST("hewan.php")
+    @POST("api_satrio.php")
     suspend fun postBarang(
         @Header("Authorization") userId: String,
         @Part("nama") nama: RequestBody,
