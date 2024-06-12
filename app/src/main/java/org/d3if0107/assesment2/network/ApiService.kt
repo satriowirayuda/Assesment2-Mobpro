@@ -8,11 +8,13 @@ import org.d3if0107.assesment2.model.Barang
 import org.d3if0107.assesment2.model.OpStatus
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.Part
+import retrofit2.http.Query
 
 private const val BASE_URL="https://unspoken.my.id/"
 
@@ -37,6 +39,12 @@ interface BarangApiService {
         @Part("nama") nama: RequestBody,
         @Part("namaLatin") namaLatin: RequestBody,
         @Part image: MultipartBody.Part
+    ): OpStatus
+
+    @DELETE("api_satrio.php")
+    suspend fun deleteBarang(
+        @Header("Authorization") userId: String,
+        @Query("id") id: String
     ): OpStatus
 }
 object BarangApi {

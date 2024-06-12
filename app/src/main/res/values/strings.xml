@@ -11,4 +11,7 @@
     <string name="nama_latin">Latin name</string>
     <string name="batal">cancelled</string>
     <string name="simpan">Save</string>
+    <string name="pesan_hapus">Delete this data?</string>
+    <string name="tombol_hapus">Delete</string>
+    <string name="tombol_batal">cancelled</string>
 </resources>

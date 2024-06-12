@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -130,14 +131,18 @@ fun MainScreen() {
         },
         floatingActionButton = {
             FloatingActionButton(onClick = {
-                val options = CropImageContractOptions(
-                    null, CropImageOptions(
-                        imageSourceIncludeGallery = false,
-                        imageSourceIncludeCamera = true,
-                        fixAspectRatio = true
+                if (user.email.isEmpty()) {
+                    Toast.makeText(context, "EROR: Anda belum login", Toast.LENGTH_LONG).show()
+                } else {
+                    val options = CropImageContractOptions(
+                        null, CropImageOptions(
+                            imageSourceIncludeGallery = false,
+                            imageSourceIncludeCamera = true,
+                            fixAspectRatio = true
+                        )
                     )
-                )
-                launcher.launch(options)
+                    launcher.launch(options)
+                }
             }) {
                 Icon(
                     imageVector = Icons.Default.Add,
@@ -200,7 +205,12 @@ fun ScreenContent(viewModel: MainViewModel,userId: String, modifier: Modifier) {
                 columns = GridCells.Fixed(2),
                 contentPadding = PaddingValues(bottom = 80.dp)
             ) {
-                items(data) { ListItem(barang = it) }
+                items(data) { barang ->
+                    ListItem(
+                        barang = barang,
+                        onDelete = { viewModel.deleteBarang(userId, barang.id) }
+                    )
+                }
             }
         }
 
@@ -224,7 +234,9 @@ fun ScreenContent(viewModel: MainViewModel,userId: String, modifier: Modifier) {
 }
 
 @Composable
-fun ListItem(barang: Barang) {
+fun ListItem(barang: Barang, onDelete:() -> Unit) {
+    var showDeleteDialog by remember { mutableStateOf(false) }
+
     Box(
         modifier = Modifier
             .padding(4.dp)
@@ -265,7 +277,30 @@ fun ListItem(barang: Barang) {
                 color = Color.White
             )
         }
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(4.dp),
+            horizontalArrangement = Arrangement.End
+        ) {
+            IconButton(onClick = { showDeleteDialog = true }) {
+                Icon(
+                    tint = Color.White,
+                    painter = painterResource(R.drawable.baseline_delete_24),
+                    contentDescription = stringResource(R.string.profil)
+                )
+            }
+        }
     }
+
+    DisplayAlertDialog(
+        openDialog = showDeleteDialog,
+        onDismissRequest = { showDeleteDialog = false },
+        onConfrimation = {
+            onDelete()
+            showDeleteDialog = false
+        }
+    )
 }
 
 private suspend fun signIn(context: Context, dataStore: UserDataStore) {
