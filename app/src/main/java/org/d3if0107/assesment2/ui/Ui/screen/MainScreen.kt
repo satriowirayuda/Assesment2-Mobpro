@@ -72,9 +72,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.d3if0107.assesment2.BuildConfig
 import org.d3if0107.assesment2.R
-import org.d3if0107.assesment2.model.Hewan
+import org.d3if0107.assesment2.model.Barang
 import org.d3if0107.assesment2.model.User
-import org.d3if0107.assesment2.network.HewanApi
+import org.d3if0107.assesment2.network.BarangApi
 import org.d3if0107.assesment2.network.UserDataStore
 import org.d3if0107.assesment2.ui.theme.Assesment2Theme
 
@@ -85,13 +85,15 @@ fun MainScreen() {
     val dataStore = UserDataStore(context)
     val user by dataStore.userFlow.collectAsState(User())
 
-    var showDialog by remember { mutableStateOf(false)}
+    var showDialog by remember { mutableStateOf(false) }
+    var showBarangDialog by remember { mutableStateOf(false) }
 
     var bitmap: Bitmap? by remember {
         mutableStateOf(null)
     }
-    val launcher = rememberLauncherForActivityResult(CropImageContract()){
+    val launcher = rememberLauncherForActivityResult(CropImageContract()) {
         bitmap = getCroppedImage(context.contentResolver, it)
+        if (bitmap != null) showBarangDialog = true
     }
 
     Scaffold(
@@ -134,18 +136,28 @@ fun MainScreen() {
             }) {
                 Icon(
                     imageVector = Icons.Default.Add,
-                    contentDescription = stringResource(id = R.string.tambah_data))
+                    contentDescription = stringResource(id = R.string.tambah_data)
+                )
             }
         }
     ) { padding ->
         ScreenContent(Modifier.padding(padding))
 
-        if (showDialog){
+        if (showDialog) {
             ProfileDialog(
                 user = user,
                 onDismissRequest = { showDialog = false }) {
                 CoroutineScope(Dispatchers.IO).launch { signOut(context, dataStore) }
                 showDialog = false
+            }
+        }
+
+        if (showBarangDialog){
+            BarangDialog(
+                bitmap = bitmap,
+                onDismissRequest = { showBarangDialog = false }) { nama, namaLatin ->
+                Log.d("TAMBAH", "$nama $namaLatin ditambahkan.")
+                showBarangDialog = false
             }
         }
     }
@@ -158,7 +170,7 @@ fun ScreenContent(modifier: Modifier) {
     val status by viewModel.status.collectAsState()
 
     when (status) {
-        HewanApi.ApiStatus.LOADING -> {
+        BarangApi.ApiStatus.LOADING -> {
             Box(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
@@ -167,7 +179,7 @@ fun ScreenContent(modifier: Modifier) {
             }
         }
 
-        HewanApi.ApiStatus.SUCCESS -> {
+        BarangApi.ApiStatus.SUCCESS -> {
             LazyVerticalGrid(
                 modifier = modifier
                     .fillMaxSize()
@@ -175,11 +187,11 @@ fun ScreenContent(modifier: Modifier) {
                 columns = GridCells.Fixed(2),
                 contentPadding = PaddingValues(bottom = 80.dp)
             ) {
-                items(data) { ListItem(hewan = it) }
+                items(data) { ListItem(barang = it) }
             }
         }
 
-        HewanApi.ApiStatus.FAILED -> {
+        BarangApi.ApiStatus.FAILED -> {
             Column(
                 modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.Center,
@@ -199,7 +211,7 @@ fun ScreenContent(modifier: Modifier) {
 }
 
 @Composable
-fun ListItem(hewan: Hewan) {
+fun ListItem(barang: Barang) {
     Box(
         modifier = Modifier
             .padding(4.dp)
@@ -209,11 +221,11 @@ fun ListItem(hewan: Hewan) {
     ) {
         AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
-                .data(HewanApi.getHewanUrl(hewan.imageId))
+                .data(BarangApi.getBarangUrl(barang.imageId))
                 .crossfade(true)
                 .build(),
 
-            contentDescription = stringResource(id = R.string.gambar, hewan.nama),
+            contentDescription = stringResource(id = R.string.gambar, barang.nama),
             contentScale = ContentScale.Crop,
             placeholder = painterResource(id = R.drawable.loading_img),
             error = painterResource(id = R.drawable.baseline_broken_image_24),
@@ -229,12 +241,12 @@ fun ListItem(hewan: Hewan) {
                 .padding(4.dp)
         ) {
             Text(
-                text = hewan.nama,
+                text = barang.nama,
                 fontWeight = FontWeight.Bold,
                 color = Color.White
             )
             Text(
-                text = hewan.namaLatin,
+                text = barang.namaLatin,
                 fontStyle = FontStyle.Italic,
                 fontSize = 14.sp,
                 color = Color.White
@@ -283,15 +295,15 @@ private suspend fun handleSignIn(
     }
 }
 
-private suspend fun signOut(context: Context,dataStore: UserDataStore){
+private suspend fun signOut(context: Context, dataStore: UserDataStore) {
     try {
         val credentialManager = CredentialManager.create(context)
         credentialManager.clearCredentialState(
             ClearCredentialStateRequest()
         )
         dataStore.saveData(User())
-    }catch (e: ClearCredentialException){
-        Log.e("SIGN-IN","Error: ${e.errorMessage}")
+    } catch (e: ClearCredentialException) {
+        Log.e("SIGN-IN", "Error: ${e.errorMessage}")
     }
 }
 

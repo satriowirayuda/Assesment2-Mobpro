@@ -7,4 +7,8 @@
     <string name="tutup">Close</string>
     <string name="logout">Logout</string>
     <string name="tambah_data">Add data</string>
+    <string name="nama">Name</string>
+    <string name="nama_latin">Latin name</string>
+    <string name="batal">cancelled</string>
+    <string name="simpan">Save</string>
 </resources>

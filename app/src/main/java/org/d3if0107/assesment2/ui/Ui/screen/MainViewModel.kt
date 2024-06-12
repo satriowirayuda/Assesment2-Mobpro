@@ -7,14 +7,14 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import org.d3if0107.assesment2.model.Hewan
-import org.d3if0107.assesment2.network.HewanApi
+import org.d3if0107.assesment2.model.Barang
+import org.d3if0107.assesment2.network.BarangApi
 
 class MainViewModel : ViewModel() {
 
-    var data = mutableStateOf(emptyList<Hewan>())
+    var data = mutableStateOf(emptyList<Barang>())
         private set
-    var status = MutableStateFlow(HewanApi.ApiStatus.LOADING)
+    var status = MutableStateFlow(BarangApi.ApiStatus.LOADING)
         private set
     init {
         retrieveData()
@@ -22,13 +22,13 @@ class MainViewModel : ViewModel() {
 
     fun retrieveData() {
         viewModelScope.launch (Dispatchers.IO){
-            status.value = HewanApi.ApiStatus.LOADING
+            status.value = BarangApi.ApiStatus.LOADING
             try{
-                data.value = HewanApi.service.getHewan()
-                status.value = HewanApi.ApiStatus.SUCCESS
+                data.value = BarangApi.service.getHewan()
+                status.value = BarangApi.ApiStatus.SUCCESS
             } catch (e: Exception){
                 Log.d("MainViewModel", "Failure: ${e.message}")
-                status.value = HewanApi.ApiStatus.FAILED
+                status.value = BarangApi.ApiStatus.FAILED
             }
         }
     }
